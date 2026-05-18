@@ -11,7 +11,7 @@
   <br />
   <video src="./public/vid-web.mp4" autoplay="autoplay" loop="loop" muted="muted" playsinline="playsinline" width="100%"></video>
   <br />
-  <a href="https://github.com/wissalmokdad222/dirs-suit/raw/main/public/vid-web.mp4">📥 Si la vidéo ne s'affiche pas, cliquez ici pour la télécharger/voir</a>
+  <a href="https://github.com/wissalmokdad222/dirs-suit/raw/main/public/vid-web.mp4">***** Si la vidéo ne s'affiche pas, cliquez ici pour la télécharger*****/voir</a>
 </div>
 
 ---
