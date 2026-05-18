@@ -1,0 +1,163 @@
+import { DeviceData, computeCategoryScores, computeGlobalScore, generateVulnerabilities } from '../engine/ScannerEngine';
+
+const MOCK_DEVICES: Partial<DeviceData>[] = [
+  {
+    deviceName: 'Google Pixel 8 Pro',
+    manufacturer: 'Google',
+    androidVersion: '14',
+    securityPatch: '2024-04',
+    bootloaderLocked: true,
+    rootAccess: false,
+    encryptionEnabled: true,
+    playProtect: true,
+    selinuxEnforcing: true,
+  },
+  {
+    deviceName: 'Samsung S24 Ultra',
+    manufacturer: 'Samsung',
+    androidVersion: '14',
+    securityPatch: '2024-03',
+    bootloaderLocked: true,
+    rootAccess: false,
+    encryptionEnabled: true,
+    playProtect: true,
+    selinuxEnforcing: true,
+  },
+  {
+    deviceName: 'OnePlus 12 (Rooté)',
+    manufacturer: 'OnePlus',
+    androidVersion: '14',
+    securityPatch: '2024-02',
+    bootloaderLocked: false,
+    rootAccess: true,
+    encryptionEnabled: true,
+    playProtect: false,
+    selinuxEnforcing: false,
+  },
+  {
+    deviceName: 'Xiaomi 14 Pro',
+    manufacturer: 'Xiaomi',
+    androidVersion: '14',
+    securityPatch: '2024-01',
+    bootloaderLocked: false,
+    rootAccess: false,
+    encryptionEnabled: true,
+    playProtect: true,
+    selinuxEnforcing: true,
+  },
+  {
+    deviceName: 'Nexus 7 (Legacy)',
+    manufacturer: 'Asus',
+    androidVersion: '9',
+    securityPatch: '2019-10',
+    bootloaderLocked: true,
+    rootAccess: false,
+    encryptionEnabled: false,
+    playProtect: true,
+    selinuxEnforcing: true,
+  },
+  {
+    deviceName: 'Huawei P40 Pro',
+    manufacturer: 'Huawei',
+    androidVersion: '11',
+    securityPatch: '2022-05',
+    bootloaderLocked: true,
+    rootAccess: false,
+    encryptionEnabled: true,
+    playProtect: false,
+    selinuxEnforcing: true,
+  },
+  {
+    deviceName: 'Dev Unit - Sony Xperia',
+    manufacturer: 'Sony',
+    androidVersion: '13',
+    securityPatch: '2023-11',
+    bootloaderLocked: true,
+    rootAccess: false,
+    adbEnabled: true,
+    developerOptions: true,
+    encryptionEnabled: true,
+    playProtect: true,
+  },
+  {
+    deviceName: 'Blackphone 2 (Secure)',
+    manufacturer: 'Silent Circle',
+    androidVersion: '12',
+    securityPatch: '2023-01',
+    bootloaderLocked: true,
+    rootAccess: false,
+    encryptionEnabled: true,
+    playProtect: true,
+    selinuxEnforcing: true,
+    vpnActive: true,
+    dnsSecure: true,
+  },
+  {
+    deviceName: 'Infected Tablet',
+    manufacturer: 'Generic',
+    androidVersion: '10',
+    securityPatch: '2021-08',
+    bootloaderLocked: false,
+    rootAccess: true,
+    magisk: true,
+    unknownSources: true,
+    playProtect: false,
+    selinuxEnforcing: false,
+  },
+  {
+    deviceName: 'Motorola G84',
+    manufacturer: 'Motorola',
+    androidVersion: '13',
+    securityPatch: '2024-02',
+    bootloaderLocked: true,
+    rootAccess: false,
+    encryptionEnabled: true,
+    playProtect: true,
+    selinuxEnforcing: true,
+    unknownSources: true,
+  }
+];
+
+export const generateMockHistory = () => {
+  return MOCK_DEVICES.map((partial, index) => {
+    const fullData: DeviceData = {
+      deviceName: partial.deviceName || 'Unknown',
+      manufacturer: partial.manufacturer || 'Generic',
+      androidVersion: partial.androidVersion || '13',
+      securityPatch: partial.securityPatch || '2023-01',
+      bootloaderLocked: partial.bootloaderLocked ?? true,
+      verifiedBoot: partial.verifiedBoot ?? true,
+      dmVerity: partial.dmVerity ?? true,
+      rootAccess: partial.rootAccess ?? false,
+      magisk: partial.magisk ?? false,
+      adbEnabled: partial.adbEnabled ?? false,
+      developerOptions: partial.developerOptions ?? false,
+      encryptionEnabled: partial.encryptionEnabled ?? true,
+      keystoreHardware: partial.keystoreHardware ?? true,
+      biometricStrong: partial.biometricStrong ?? true,
+      unknownSources: partial.unknownSources ?? false,
+      playProtect: partial.playProtect ?? true,
+      vpnActive: partial.vpnActive ?? false,
+      dnsSecure: partial.dnsSecure ?? false,
+      wifiSecurity: partial.wifiSecurity || 'WPA3',
+      selinuxEnforcing: partial.selinuxEnforcing ?? true,
+      asrEnabled: partial.asrEnabled ?? true,
+      networkMonitor: partial.networkMonitor ?? false,
+      googleAccountLogin: partial.googleAccountLogin ?? true,
+    };
+
+    const catScores = computeCategoryScores(fullData);
+    const global = computeGlobalScore(catScores);
+    const vulns = generateVulnerabilities(fullData);
+
+    return {
+      id: `MOCK-${1000 + index}`,
+      date: new Date(Date.now() - index * 3600000 * 24).toISOString(), // Spread over days
+      deviceName: fullData.deviceName,
+      data: fullData,
+      globalScore: global,
+      categoryScores: catScores,
+      vulns
+    };
+  });
+};
